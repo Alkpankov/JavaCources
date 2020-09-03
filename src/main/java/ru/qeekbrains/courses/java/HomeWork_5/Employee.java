@@ -1,6 +1,5 @@
 package ru.qeekbrains.courses.java.HomeWork_5;
 
-import java.util.Scanner;
 
 public class Employee {
     private String fullName;
@@ -10,7 +9,6 @@ public class Employee {
     private int salary;
     private int age;
 
-    Scanner scanner= new Scanner(System.in);
 
 
     public Employee (String fullName, String position, String eMail, String phoneNumber, int salary, int age){
