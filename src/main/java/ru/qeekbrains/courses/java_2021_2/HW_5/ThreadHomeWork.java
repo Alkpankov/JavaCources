@@ -1,9 +1,9 @@
 package ru.qeekbrains.courses.java_2021_2.HW_5;
 
-public class Main {
-    public static void main(String[] args) {
-        firstMethod();
-//        secondMethod();
+public class ThreadHomeWork {
+    public static void main(String[] args) throws InterruptedException {
+//        firstMethod();
+        secondMethod();
     }
 
     public static void firstMethod() {
@@ -16,10 +16,12 @@ public class Main {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (float) (arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
         }
+        System.out.println(arr[5]);
+        System.out.println(arr[10]);
         System.out.println("One thread time: " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
-    public static void secondMethod() {
+    public static void secondMethod() throws InterruptedException {
         int size = 10_000_000;
         float[] arr = new float[size];
         for (int i = 0; i < arr.length; i++) {
@@ -30,8 +32,8 @@ public class Main {
         float[] leftArr = new float[size/2];
         float[] rightArr = new float[size/2];
 
-        System.arraycopy(arr, 0, leftArr,0, arr.length/2);
-        System.arraycopy(arr, arr.length/2, rightArr,0, arr.length/2);
+        System.arraycopy(arr, 0, leftArr,0, size/2);
+        System.arraycopy(arr, size/2, rightArr,0, size/2);
 
         Thread thread1 = new Thread(new Runnable() {
             @Override
@@ -41,6 +43,7 @@ public class Main {
                 }
             }
         });
+        thread1.start();
         Thread thread2 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,17 +52,13 @@ public class Main {
                 }
             }
         });
-
-        System.arraycopy(leftArr, 0, arr,0, arr.length/2);
-        System.arraycopy(rightArr, 0, arr,arr.length/2, arr.length/2);
-
-        // Создаем два массива для левой и правой части исходного
-        // Копируем в них значения из большого массива
-        // Запускает два потока и параллельно просчитываем каждый малый массив
-        // ...
-        // Склеиваем малые массивы обратно в один большой
-        // ...
+        thread2.start();
+        thread1.join();
+        thread2.join();
+        System.arraycopy(leftArr, 0, arr,0, size/2);
+        System.arraycopy(rightArr, 0, arr,size/2, size/2);
         System.out.println("Two thread time: " + (System.currentTimeMillis() - startTime) + " ms.");
     }
 
 }
+
